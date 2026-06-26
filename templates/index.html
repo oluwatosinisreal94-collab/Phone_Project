@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneHub Nigeria</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- <img src="/static/images/iphone.jpg"> -->
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">📱 PhoneHub</div>
+        <ul> <li><a href="/track">Track My Order</a></li></ul>
+
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Phones</a></li>
+            <li><a href="#">Deals</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Latest Smartphones</h1>
+            <p>Get Original Phones At Affordable Prices</p>
+            <a href="#" class="btn">Shop Now</a>
+        </div>
+    </section>
+
+    <section class="products">
+        <h2>Featured Phones</h2>
+
+        <div class="product-grid">
+
+            {{range .}}
+            <div class="card">
+                <img src="{{.Image}}" alt="{{.Name}}">
+                <h3>{{.ID}}</h3>
+                <h3>{{.Name}}</h3>
+                 <p><strong>Brand:</strong> {{.Brand}}</p>
+                <p class="price">{{.Price}}</p>
+                <form action="/buy" method="post">
+                    <input type="hidden" name="phone_id" value="{{.ID}}">
+                    <button class="buy-btn">Buy Now</button>
+                </form>
+            </div>
+            {{end}}
+    </section>
+
+
+
+    <section class="features">
+        <h2>Why Choose Us?</h2>
+
+        <div class="feature-boxes">
+
+            <div class="feature">
+                <h3>✅ Original Devices</h3>
+                <p>100% genuine smartphones.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🚚 Fast Delivery</h3>
+                <p>Nationwide delivery service.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🛡 Warranty</h3>
+                <p>Warranty on selected devices.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="contact">
+        <h2>Contact Us</h2>
+        <p>Email: sales@phonehub.com</p>
+        <p>Phone: +234 800 123 4567</p>
+        <p>Lagos, Nigeria</p>
+    </section>
+
+    <footer>
+        <p>© 2026 PhoneHub Nigeria. All Rights Reserved.</p>
+    </footer>
+
+</body>
+
+</html>

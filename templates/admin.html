@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PhoneHub Admin</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #f1f5f9;
+        }
+
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .container {
+            padding: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-left: 6px solid #2563eb;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .order-title {
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        .order-id {
+            color: #2563eb;
+        }
+
+
+        .info {
+            margin: 15px 0;
+        }
+
+
+        .status {
+            background: #dcfce7;
+            color: #166534;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+
+        .delete {
+            background: #ef4444;
+            color: white;
+        }
+
+
+        .update {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .stat-card h1 {
+            margin-top: 15px;
+            font-size: 40px;
+        }
+
+        .total {
+            background: #2563eb;
+        }
+
+
+        .new {
+            background: #f59e0b;
+        }
+
+        .processing {
+            background: #8b5cf6;
+        }
+
+        .completed {
+            background: #22c55e;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: #111827;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="navbar">
+
+        <h2>📱 PhoneHub Admin</h2>
+
+        <div>
+            Dashboard
+        </div>
+
+        <form action="/admin" method="GET">
+            <input type="text" name="search" placeholder="Search customer">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+
+
+    <div class="container">
+
+        <div class="dashboard-cards">
+
+            <div class="stat-card total">
+                <h3>📦 Total Orders</h3>
+                <h1>{{.TotalOrders}}</h1>
+            </div>
+
+            <div class="stat-card new">
+                <h3>🆕 New Orders</h3>
+                <h1>{{.NewOrders}}</h1>
+            </div>
+
+            <div class="stat-card processing">
+                <h3>🚚 Processing</h3>
+                <h1>{{.ProcessingOrders}}</h1>
+            </div>
+
+            <div class="stat-card completed">
+                <h3>✅ Completed</h3>
+                <h1>{{.CompletedOrders}}</h1>
+            </div>
+
+        </div>
+
+
+
+        <h1>
+            Customer Orders
+        </h1>
+
+
+        <table>
+
+            <tr>
+                <th>ID</th>
+                <th>Customer</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+
+            {{range .Orders}}
+
+            <tr>
+
+                <td>{{.ID}}</td>
+
+                <td>{{.Customer}}</td>
+                <td> {{.PhoneNumber}}</td>
+                <td> {{.Address}}</td>
+                <td>{{.ProductName}}</td>
+                <td>{{.ProductPrice}}</td>
+                <td>{{.Status}}</td>
+                <td>
+                    <form action="/update" method="POST">
+                        <input type="hidden" name="update" value="{{.ID}}">
+                        <button class="update">Update Status</button>
+                    </form>
+
+                </td>
+                <td>
+                    <form action="/delete" method="POST">
+                        <input type="hidden" name="delete" value="{{.ID}}">
+                        <button class="delete">Delete</button>
+                    </form>
+                </td>
+
+            </tr>
+
+            {{end}}
+
+        </table>
+
+    </div>
+
+
+</body>
+
+</html>
