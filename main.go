@@ -21,7 +21,6 @@ type AdminData struct {
 	NewOrders        int
 	ProcessingOrders int
 	CompletedOrders  int
-	
 }
 
 type Order struct {
@@ -99,6 +98,16 @@ var phones = []Phone{
 
 func AdminFunction(w http.ResponseWriter, r *http.Request) {
 
+	cookie, err := r.Cookie("logged_in")
+	if err != nil {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+	if cookie.Value != "yes" {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
 	TotalOrders := len(CustomerInformation)
 
 	NewOrders := 0
@@ -107,11 +116,12 @@ func AdminFunction(w http.ResponseWriter, r *http.Request) {
 
 	for i := 0; i < len(CustomerInformation); i++ {
 
-		if CustomerInformation[i].Status == "New" {
+		switch CustomerInformation[i].Status {
+		case "New":
 			NewOrders++
-		} else if CustomerInformation[i].Status == "Processing" {
+		case "Processing":
 			ProcessingOrders++
-		} else if CustomerInformation[i].Status == "Completed" {
+		case "Completed":
 			CompletedOrders++
 		}
 	}
@@ -303,7 +313,43 @@ func TrackFunction(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, FoundOrder)
 }
 
+func AddminLogin(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+		templ, _ := template.ParseFiles("templates/login.html")
+		templ.Execute(w, nil)
+		return
+	}
+
+	Admin := r.FormValue("adminname")
+	AdminPassword := r.FormValue("adminpassword")
+
+	Name := "Admin"
+	Password := 1234
+
+	PasswordConverter, _ := strconv.Atoi(AdminPassword)
+
+	if Admin == Name && PasswordConverter == Password {
+
+		cookie := http.Cookie{
+			Name:  "logged_in",
+			Value: "yes",
+		}
+
+		http.SetCookie(w, &cookie)
+
+		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+
+	} else if Admin != Name || PasswordConverter != Password {
+		fmt.Fprintln(w, "invalid UserName And Password")
+		return
+	}
+
+}
+
 func main() {
+
+	http.HandleFunc("/login", AddminLogin)
 
 	http.HandleFunc("/track", TrackFunction)
 

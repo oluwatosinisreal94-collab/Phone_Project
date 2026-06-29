@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneHub Nigeria</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <!-- <img src="/static/images/iphone.jpg"> -->
+
+    <style>
+        .login-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, .12);
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: #111827;
+            margin-bottom: 10px;
+        }
+
+        .login-card p {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .login-card label {
+            display: block;
+            text-align: left;
+            margin-top: 18px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .login-card input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 8px rgba(37, 99, 235, .25);
+        }
+
+        .login-card button {
+            width: 100%;
+            margin-top: 30px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #2563eb;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .login-card button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        
+    </style>
+
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">📱 PhoneHub</div>
+        <ul>
+            <li><a href="/track">Track My Order</a></li>
+        </ul>
+
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Phones</a></li>
+            <li><a href="#">Deals</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+
+
+
+
+    <div class="login-section">
+        <div class="login-card">
+            <h1>🔐 Admin Login</h1>
+            <p>Sign in to manage customer orders</p>
+            <form action="/login" method="POST">
+                <label>Username</label>
+                <input type="text" name="adminname" placeholder="Enter your username" required>
+                <label>Password</label>
+                <input type="password" name="adminpassword" placeholder="Enter your password" required>
+                <button type="submit"> Login </button>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+    <section class="features">
+        <h2>Why Choose Us?</h2>
+
+        <div class="feature-boxes">
+
+            <div class="feature">
+                <h3>✅ Original Devices</h3>
+                <p>100% genuine smartphones.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🚚 Fast Delivery</h3>
+                <p>Nationwide delivery service.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🛡 Warranty</h3>
+                <p>Warranty on selected devices.</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="contact">
+        <h2>Contact Us</h2>
+        <p>Email: sales@phonehub.com</p>
+        <p>Phone: +234 800 123 4567</p>
+        <p>Lagos, Nigeria</p>
+    </section>
+
+    <footer>
+        <p>© 2026 PhoneHub Nigeria. All Rights Reserved.</p>
+    </footer>
+
+</body>
+
+</html>
