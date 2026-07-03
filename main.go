@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type Phone struct {
@@ -313,6 +314,23 @@ func TrackFunction(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, FoundOrder)
 }
 
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+
+		return
+	}
+
+	cookie := http.Cookie{
+		Name:    "logged_in",
+		Value:   "",
+		Expires: time.Now().Add(-1 * time.Hour),
+	}
+	http.SetCookie(w, &cookie)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+
+}
+
 func AddminLogin(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
@@ -332,8 +350,9 @@ func AddminLogin(w http.ResponseWriter, r *http.Request) {
 	if Admin == Name && PasswordConverter == Password {
 
 		cookie := http.Cookie{
-			Name:  "logged_in",
-			Value: "yes",
+			Name:    "logged_in",
+			Value:   "yes",
+			Expires: time.Now().Add(1 * time.Hour),
 		}
 
 		http.SetCookie(w, &cookie)
@@ -349,6 +368,7 @@ func AddminLogin(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
+	http.HandleFunc("/logout", LogoutHandler)
 	http.HandleFunc("/login", AddminLogin)
 
 	http.HandleFunc("/track", TrackFunction)
