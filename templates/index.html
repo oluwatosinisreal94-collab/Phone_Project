@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneHub Nigeria</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">📱 PhoneHub</div>
+
+        <ul class="nav-left">
+            <li><a href="/">Home</a></li>
+            <li><a href="#products">Phones</a></li>
+            <li><a href="#deals">Deals</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <form action="/" method="get" class="nav-search">
+            <input type="text" name="search" placeholder="🔍 Search phones, brands..." value="{{.Search}}">
+            
+            <select name="sort">
+                <option value="">Sort By</option>
+                <option value="price_low">Lowest Price</option>
+                <option value="price_high">Highest Price</option>
+                <option value="name_az">Name (A–Z)</option>
+                <option value="name_za">Name (Z–A)</option>
+            </select>
+
+            <button type="submit">Search</button>
+        </form>
+
+        <ul class="nav-right">
+            <li><a href="/track">Track My Order</a></li>
+            <li><a href="/login">Admin Login</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text">
+            <span class="hero-tagline">Smart Choices. Smart Prices.</span>
+            <h1 class="hero-title">Find Your Next Smartphone Today</h1>
+            <p class="hero-description">
+                Browse premium smartphones from trusted brands and enjoy affordable prices,
+                genuine products, and fast nationwide delivery.
+            </p>
+
+            <div class="hero-actions">
+                <a href="#products" class="btn btn-primary">Shop Now</a>
+                <a href="#deals" class="btn btn-secondary">View Deals</a>
+            </div>
+        </div>
+
+        <div class="hero-image">
+            <img src="/static/image/igor-omilaev-X4S-G_Q9U9g-unsplash.jpg" alt="Featured Smartphone">
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <h2>Featured Phones</h2>
+
+        {{if .Search}}
+        <div class="search-info">
+            Showing {{.ResultCount}} results for "{{.Search}}"
+        </div>
+        {{end}}
+
+        {{if .Message}}
+        <div class="error-message">
+            {{.Message}}
+        </div>
+        {{end}}
+
+        <div class="product-grid">
+            {{range .Phones}}
+            <div class="card">
+                <img src="{{.Image}}" alt="{{.Name}}">
+                <p class="brand">{{.Brand}}</p>
+                <h3>{{.Name}}</h3>
+                <p class="price">₦{{.Price}}</p>
+               <a href="/phone?id={{.ID}}" class="details-btn">View Details</a>
+                <form action="/buy" method="post">
+                    <input type="hidden" name="phone_id" value="{{.ID}}">
+                    <button type="submit" class="buy-btn">Buy Now</button>
+                </form>
+            </div>
+            {{end}}
+        </div> <!-- Fixed missing closing tag -->
+    </section>
+
+    <section class="features">
+        <h2>Why Choose Us?</h2>
+
+        <div class="feature-boxes">
+            <div class="feature">
+                <h3>✅ Original Devices</h3>
+                <p>100% genuine smartphones.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🚚 Fast Delivery</h3>
+                <p>Nationwide delivery service.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🛡 Warranty</h3>
+                <p>Warranty on selected devices.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: sales@phonehub.com</p>
+        <p>Phone: +234 800 123 4567</p>
+        <p>Lagos, Nigeria</p>
+    </section>
+
+    <footer>
+        <p>© 2026 PhoneHub Nigeria. All Rights Reserved.</p>
+    </footer>
+
+</body>
+
+</html>

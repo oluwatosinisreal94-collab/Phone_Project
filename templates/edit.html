@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Phone</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1f5f9;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .15);
+        }
+
+        .navbar h2 {
+            font-size: 28px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 550px;
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .12);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            color: gray;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 8px rgba(37, 99, 235, .3);
+        }
+
+        .image-preview {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid #2563eb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+        }
+
+        .buttons button,
+        .buttons a {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save {
+            border: none;
+            background: #2563eb;
+            color: white;
+        }
+
+        .save:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel {
+            background: #ef4444;
+            color: white;
+        }
+
+        .cancel:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h2>📱 PhoneHub Admin</h2>
+        <h3>Edit Phone</h3>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Edit Phone</h1>
+
+            <p>Update the information below.</p>
+
+            <form action="/savephone" method="POST">
+
+                <!-- Hidden ID -->
+                <input type="hidden" name="id" value="{{.ID}}">
+
+                <label>Phone Name</label>
+                <input type="text" name="name" value="{{.Name}}" required>
+
+                <label>Price</label>
+                <input type="text" name="price" value="{{.Price}}" required>
+
+                <label>Brand</label>
+                <input type="text" name="brand" value="{{.Brand}}" required>
+
+                <label>Image Path</label>
+                <input type="text" name="image" value="{{.Image}}" required>
+
+                <div class="image-preview">
+                    <img src="{{.Image}}" alt="{{.Name}}">
+                </div>
+
+               
+
+                <div class="buttons">
+                   
+                        <input type="hidden" name="id" value="{{.ID}}">
+                        <button class="save" type="submit">
+                            💾 Save Changes
+                        </button>
+                  
+                    <a href="/admin" class="cancel">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
