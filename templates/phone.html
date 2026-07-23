@@ -3,21 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{.Name}} - PhoneHub</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    
-    <h1>{{.Name}}</h1>
 
-<img src="{{.Image}}" alt="{{.Name}}">
+<div class="product-container">
 
-<p>Price: {{.Price}}</p>
-<p>Brand: {{.Brand}}</p>
-<p>Capacity: {{.Capacity}}</p>
-<p>Screen Size: {{.ScreenSize}}</p>
-<p>Version: {{.Version}}</p>
-<p>Front Camera: {{.FrontCamera}}</p>
-<p>Description: {{.Description}}</p>
+    <div class="product-image">
+        <img src="{{.Image}}" alt="{{.Name}}">
+    </div>
+
+    <div class="product-info">
+
+        <h1>{{.Name}}</h1>
+
+        <p class="rating">⭐⭐⭐⭐⭐ 4.9 (245 Reviews)</p>
+
+        <h2 class="price">{{.Price}}</h2>
+
+        <div class="specs">
+            <p><strong>Brand:</strong> {{.Brand}}</p>
+            <p><strong>Capacity:</strong> {{.Capacity}}</p>
+            <p><strong>Screen Size:</strong> {{.ScreenSize}}</p>
+            <p><strong>Version:</strong> {{.Version}}</p>
+            <p><strong>Front Camera:</strong> {{.FrontCamera}}</p>
+        </div>
+
+        <form action="/buy" method="post">
+            <input type="hidden" name="phone_id" value="{{.ID}}">
+            <button class="buy-btn" type="submit">
+                🛒 Buy Now
+            </button>
+        </form>
+
+        <a href="/" class="back-btn">
+            ⬅ Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+<div class="description-card">
+    <h2>Description</h2>
+
+    <p>
+        {{.Description}}
+    </p>
+</div>
 
 </body>
 </html>
+

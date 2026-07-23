@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart - PhoneHub</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        <a href="/">📱 PhoneHub</a>
+    </div>
+
+    <div class="nav-actions">
+        <a href="/">⬅ Continue Shopping</a>
+    </div>
+</nav>
+
+<div class="cart-container">
+
+    <h1>🛒 My Shopping Cart</h1>
+
+    {{if .}}
+
+        {{range .}}
+
+        <div class="cart-card">
+
+            <div class="cart-image">
+                <img src="{{.Image}}" alt="{{.Name}}">
+            </div>
+
+            <div class="cart-info">
+
+                <h2>{{.Name}}</h2>
+
+                <p><strong>Brand:</strong> {{.Brand}}</p>
+
+                <p><strong>Capacity:</strong> {{.Capacity}}</p>
+
+                <h3 class="price">{{.Price}}</h3>
+
+                <button class="remove-btn">
+                    Remove
+                </button>
+
+            </div>
+
+        </div>
+
+        {{end}}
+
+        <div class="cart-footer">
+
+            <button class="checkout-btn">
+                Proceed to Checkout
+            </button>
+
+        </div>
+
+    {{else}}
+
+        <div class="empty-cart">
+
+            <h2>Your cart is empty.</h2>
+
+            <p>Add some phones to begin shopping.</p>
+
+            <a href="/">Go Shopping</a>
+
+        </div>
+
+    {{end}}
+
+</div>
+
+</body>
+</html>

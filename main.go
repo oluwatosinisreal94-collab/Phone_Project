@@ -19,16 +19,16 @@ type HomeStruct struct {
 }
 
 type Phone struct {
-	ID    int
-	Name  string
-	Price string
-	Image string
-	Brand string
-	Capacity string
-	ScreenSize string
-	Version string
+	ID          int
+	Name        string
+	Price       string
+	Image       string
+	Brand       string
+	Capacity    string
+	ScreenSize  string
+	Version     string
 	FrontCamera string
-	BackCamera   string
+	BackCamera  string
 	Description string
 }
 
@@ -58,60 +58,100 @@ var idCounter = 1
 var highest = 9
 var phones = []Phone{
 	{
-		ID:    1,
-		Name:  "iPhone 16 Pro",
-		Price: "₦1,850,000",
-		Image: "../static/image/coinview-app-h7a6g0ua6LM-unsplash.jpg",
-		Brand: "Apple",
+		ID:          1,
+		Name:        "iPhone 16 Pro",
+		Price:       "₦1,850,000",
+		Image:       "../static/image/coinview-app-h7a6g0ua6LM-unsplash.jpg",
+		Brand:       "Apple",
+		Capacity:    "256GB",
+		ScreenSize:  "6.7 inches",
+		Version:     "iPhone 16 Pro",
+		FrontCamera: "12MP",
+		Description: "A premium Apple smartphone.",
 	},
 	{
-		ID:    2,
-		Name:  "Samsung Galaxy S26",
-		Price: "₦1,650,000",
-		Image: "/static/image/igor-omilaev-X4S-G_Q9U9g-unsplash.jpg",
-		Brand: "Sony",
+		ID:          2,
+		Name:        "Samsung Galaxy S26",
+		Price:       "₦1,650,000",
+		Image:       "/static/image/igor-omilaev-X4S-G_Q9U9g-unsplash.jpg",
+		Brand:       "Sony",
+		Capacity:    "352GB",
+		ScreenSize:  "2.5 inches",
+		Version:     "Samsung Galaxy S26",
+		FrontCamera: "14MP",
+		Description: "A premium Samsung smartphone.",
 	},
 	{
-		ID:    3,
-		Name:  "Redmi Note 15",
-		Price: "₦450,000",
-		Image: "/static/image/neil-soni-6wdRuK7bVTE-unsplash.jpg",
-		Brand: "Apple",
+		ID:          3,
+		Name:        "Redmi Note 15",
+		Price:       "₦450,000",
+		Image:       "/static/image/neil-soni-6wdRuK7bVTE-unsplash.jpg",
+		Brand:       "Apple",
+		Capacity:    "352GB",
+		ScreenSize:  "2.5 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "1MP",
+		Description: "A premium Redmi smartphone.",
 	},
 	{
-		ID:    4,
-		Name:  "Redmi Note 15",
-		Price: "₦450,000",
-		Image: "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
-		Brand: "Sony",
+		ID:          4,
+		Name:        "Redmi Note 15",
+		Price:       "₦450,000",
+		Image:       "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
+		Brand:       "Sony",
+		Capacity:    "352GB",
+		ScreenSize:  "2.5 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "16MP",
+		Description: "A premium Redmi smartphone.",
 	},
 	{
-		ID:    5,
-		Name:  "Redmi Note 15",
-		Price: "₦450,00",
-		Image: "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
-		Brand: "Google",
+		ID:          5,
+		Name:        "Redmi Note 15",
+		Price:       "₦450,00",
+		Image:       "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
+		Brand:       "Google",
+		Capacity:    "352GB",
+		ScreenSize:  "3.5 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "15MP",
+		Description: "A premium Redmi smartphone.",
 	},
 	{
-		ID:    6,
-		Name:  "Redmi Note 15",
-		Price: "₦640,000",
-		Image: "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
-		Brand: "Xiaomi",
+		ID:          6,
+		Name:        "Redmi Note 15",
+		Price:       "₦640,000",
+		Image:       "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
+		Brand:       "Xiaomi",
+		Capacity:    "352GB",
+		ScreenSize:  "2.5 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "14MP",
+		Description: "A premium Redmi smartphone.",
 	},
 	{
-		ID:    7,
-		Name:  "Redmi Note 15",
-		Price: "₦420,000",
-		Image: "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
-		Brand: "Samsung",
+		ID:          7,
+		Name:        "Redmi Note 15",
+		Price:       "₦420,000",
+		Image:       "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
+		Brand:       "Samsung",
+		Capacity:    "352GB",
+		ScreenSize:  "2.6 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "15MP",
+		Description: "A premium Redmi smartphone.",
 	},
 	{
-		ID:    8,
-		Name:  "Redmi Note 15",
-		Price: "₦450,000",
-		Image: "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
-		Brand: "Apple",
+		ID:          8,
+		Name:        "Redmi Note 15",
+		Price:       "₦450,000",
+		Image:       "/static/image/shiwa-id-Uae7ouMw91A-unsplash.jpg",
+		Brand:       "Apple",
+		Capacity:    "352GB",
+		ScreenSize:  "2.2 inches",
+		Version:     "Redmi Note 15",
+		FrontCamera: "18MP",
+		Description: "A premium Redmi smartphone.",
 	},
 }
 
@@ -636,8 +676,13 @@ func PhoneHandler(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, selectedPhone)
 }
 
+func CartHandler(w http.ResponseWriter , r *http.Request){
+	
+}
+
 func main() {
 
+	http.HandleFunc("/cart" , CartHandler)
 	http.HandleFunc("/phone", PhoneHandler)
 	http.HandleFunc("/", IndexFunctionHandler)
 	http.HandleFunc("/savephone", SaveEditedPhoneHandler)
