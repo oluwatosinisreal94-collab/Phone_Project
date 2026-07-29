@@ -1,34 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cart - PhoneHub</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-<nav class="navbar">
-    <div class="logo">
-        <a href="/">📱 PhoneHub</a>
-    </div>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">📱 PhoneHub</a>
+        </div>
 
-    <div class="nav-actions">
-        <a href="/">⬅ Continue Shopping</a>
-    </div>
-</nav>
+        
 
-<div class="cart-container">
+        <div class="nav-actions">
+            <a href="/">⬅ Continue Shopping</a>
+        </div>
+    </nav>
 
-    <h1>🛒 My Shopping Cart</h1>
+    <div class="cart-container">
 
-    {{if .}}
+        <h1>🛒 My Shopping Cart {{.ItemCount}}</h1>
 
-        {{range .}}
+        {{if .}}
+
+        {{range .CartItems}}
 
         <div class="cart-card">
-
             <div class="cart-image">
                 <img src="{{.Image}}" alt="{{.Name}}">
             </div>
@@ -43,9 +45,16 @@
 
                 <h3 class="price">{{.Price}}</h3>
 
-                <button class="remove-btn">
-                    Remove
-                </button>
+
+                <form action="/remove" method="post">
+
+                    <input type="hidden" name="phone_id" value="{{.ID}}">
+
+                    <button class="remove-btn">
+                        Remove
+                    </button>
+
+                </form>
 
             </div>
 
@@ -55,13 +64,15 @@
 
         <div class="cart-footer">
 
+             <h2>Total: ₦{{.Total}}</h2>
+
             <button class="checkout-btn">
                 Proceed to Checkout
             </button>
 
         </div>
 
-    {{else}}
+        {{else}}
 
         <div class="empty-cart">
 
@@ -73,9 +84,10 @@
 
         </div>
 
-    {{end}}
+        {{end}}
 
-</div>
+    </div>
 
 </body>
+
 </html>

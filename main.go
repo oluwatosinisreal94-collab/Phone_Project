@@ -155,6 +155,19 @@ var phones = []Phone{
 	},
 }
 
+type CartItem struct {
+	Phone    Phone
+	Quantity int
+}
+
+var Cart []Phone
+
+type CartTotal struct {
+	CartItems []Phone
+	Total     int
+	ItemCount int
+}
+
 func AdminFunction(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("logged_in")
@@ -269,20 +282,25 @@ func BuyHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.FormValue("phone_id")
+	phoneID, _ := strconv.Atoi(id)
 
 	for _, phone := range phones {
 
-		if fmt.Sprint(phone.ID) == id {
+		if phone.ID == phoneID {
 
-			tmpl, err := template.ParseFiles("templates/checkout.html")
-			if err != nil {
-				http.Error(w, err.Error(), 500)
-				return
-			}
+			Cart = append(Cart, phone)
 
-			tmpl.Execute(w, phone)
-
+			http.Redirect(w, r, "/cart", http.StatusSeeOther)
 			return
+			// tmpl, err := template.ParseFiles("templates/checkout.html")
+			// if err != nil {
+			// 	http.Error(w, err.Error(), 500)
+			// 	return
+			// }
+
+			// tmpl.Execute(w, phone)
+
+			// return
 		}
 	}
 
@@ -676,13 +694,55 @@ func PhoneHandler(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, selectedPhone)
 }
 
-func CartHandler(w http.ResponseWriter , r *http.Request){
-	
+func CartHandler(w http.ResponseWriter, r *http.Request) {
+
+	total := 0
+
+	for i := 0; i < len(Cart); i++ {
+
+		cleanPrice1 := Cart[i].Price
+		cleanPrice1 = strings.ReplaceAll(cleanPrice1, ",", "")
+		cleanPrice1 = strings.ReplaceAll(cleanPrice1, "₦", "")
+
+		price, _ := strconv.Atoi(cleanPrice1)
+
+		total = total + price
+
+	}
+
+	cartData := CartTotal{
+		CartItems: Cart,
+		Total:     total,
+		ItemCount: len(Cart),
+	}
+
+	templ, _ := template.ParseFiles("templates/cart.html")
+	templ.Execute(w, cartData)
+}
+
+func RemoveHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	id := r.FormValue("phone_id")
+	ChangeStrInt, _ := strconv.Atoi(id)
+
+	for i := 0; i < len(Cart); i++ {
+		if Cart[i].ID == ChangeStrInt {
+			Cart = append(Cart[:i], Cart[i+1:]...)
+			break
+		}
+	}
+	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }
 
 func main() {
 
-	http.HandleFunc("/cart" , CartHandler)
+	http.HandleFunc("/remove", RemoveHandler)
+	http.HandleFunc("/cart", CartHandler)
 	http.HandleFunc("/phone", PhoneHandler)
 	http.HandleFunc("/", IndexFunctionHandler)
 	http.HandleFunc("/savephone", SaveEditedPhoneHandler)
