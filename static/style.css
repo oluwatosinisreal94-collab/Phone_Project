@@ -489,3 +489,8 @@ footer {
     padding:60px;
     border-radius:15px;
 }
+
+.logo a {
+    text-decoration: none;
+    color: inherit; /* Keeps the text color matching your design */
+}

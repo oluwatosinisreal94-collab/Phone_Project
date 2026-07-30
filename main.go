@@ -160,10 +160,10 @@ type CartItem struct {
 	Quantity int
 }
 
-var Cart []Phone
+var Cart []CartItem
 
 type CartTotal struct {
-	CartItems []Phone
+	CartItems []CartItem
 	Total     int
 	ItemCount int
 }
@@ -288,23 +288,39 @@ func BuyHandler(w http.ResponseWriter, r *http.Request) {
 
 		if phone.ID == phoneID {
 
-			Cart = append(Cart, phone)
+			for i := 0; i < len(Cart); i++ {
+				
+				if Cart[i].Phone.ID == phoneID {
 
+					
+					Cart[i].Quantity++
+					
+					http.Redirect(w, r, "/cart", http.StatusSeeOther)
+					return
+					// tmpl, err := template.ParseFiles("templates/checkout.html")
+					// if err != nil {
+					// 	http.Error(w, err.Error(), 500)
+					// 	return
+					// }
+
+					// tmpl.Execute(w, phone)
+
+					// return
+				}
+			}
+
+			newItem := CartItem{
+				Phone:    phone,
+				Quantity: 1,
+			}
+			
+			Cart = append(Cart, newItem)
+			
 			http.Redirect(w, r, "/cart", http.StatusSeeOther)
 			return
-			// tmpl, err := template.ParseFiles("templates/checkout.html")
-			// if err != nil {
-			// 	http.Error(w, err.Error(), 500)
-			// 	return
-			// }
-
-			// tmpl.Execute(w, phone)
-
-			// return
 		}
 	}
-
-	http.Error(w, "Phone not found", 404)
+	http.Error(w, "Phone not found", http.StatusNotFound)
 }
 
 // func HomeHandler(w http.ResponseWriter, r *http.Request) {
@@ -700,13 +716,14 @@ func CartHandler(w http.ResponseWriter, r *http.Request) {
 
 	for i := 0; i < len(Cart); i++ {
 
-		cleanPrice1 := Cart[i].Price
+		cleanPrice1 := Cart[i].Phone.Price
 		cleanPrice1 = strings.ReplaceAll(cleanPrice1, ",", "")
 		cleanPrice1 = strings.ReplaceAll(cleanPrice1, "₦", "")
 
 		price, _ := strconv.Atoi(cleanPrice1)
 
-		total = total + price
+		// total = total + price
+		total += price * Cart[i].Quantity
 
 	}
 
@@ -731,7 +748,7 @@ func RemoveHandler(w http.ResponseWriter, r *http.Request) {
 	ChangeStrInt, _ := strconv.Atoi(id)
 
 	for i := 0; i < len(Cart); i++ {
-		if Cart[i].ID == ChangeStrInt {
+		if Cart[i].Phone.ID == ChangeStrInt {
 			Cart = append(Cart[:i], Cart[i+1:]...)
 			break
 		}
@@ -781,4 +798,3 @@ func main() {
 		fmt.Println(err)
 	}
 }
-
