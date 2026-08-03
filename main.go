@@ -289,12 +289,11 @@ func BuyHandler(w http.ResponseWriter, r *http.Request) {
 		if phone.ID == phoneID {
 
 			for i := 0; i < len(Cart); i++ {
-				
+
 				if Cart[i].Phone.ID == phoneID {
 
-					
 					Cart[i].Quantity++
-					
+
 					http.Redirect(w, r, "/cart", http.StatusSeeOther)
 					return
 					// tmpl, err := template.ParseFiles("templates/checkout.html")
@@ -313,9 +312,9 @@ func BuyHandler(w http.ResponseWriter, r *http.Request) {
 				Phone:    phone,
 				Quantity: 1,
 			}
-			
+
 			Cart = append(Cart, newItem)
-			
+
 			http.Redirect(w, r, "/cart", http.StatusSeeOther)
 			return
 		}
@@ -714,6 +713,8 @@ func CartHandler(w http.ResponseWriter, r *http.Request) {
 
 	total := 0
 
+	ItemCount := 0
+
 	for i := 0; i < len(Cart); i++ {
 
 		cleanPrice1 := Cart[i].Phone.Price
@@ -725,12 +726,14 @@ func CartHandler(w http.ResponseWriter, r *http.Request) {
 		// total = total + price
 		total += price * Cart[i].Quantity
 
+		ItemCount = ItemCount + Cart[i].Quantity
+
 	}
 
 	cartData := CartTotal{
 		CartItems: Cart,
 		Total:     total,
-		ItemCount: len(Cart),
+		ItemCount: ItemCount,
 	}
 
 	templ, _ := template.ParseFiles("templates/cart.html")
@@ -756,7 +759,53 @@ func RemoveHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/cart", http.StatusSeeOther)
 }
 
+func IncreaseQuantityHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	id := r.FormValue("phone_id")
+	phoneID, _ := strconv.Atoi(id)
+	for i := 0; i < len(Cart); i++ {
+		if Cart[i].Phone.ID == phoneID {
+			Cart[i].Quantity = Cart[i].Quantity + 1
+			http.Redirect(w, r, "/cart", http.StatusSeeOther)
+			return
+		}
+
+	}
+}
+
+func DecreaseQuantityHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	id := r.FormValue("phone_id")
+
+	phoneID, _ := strconv.Atoi(id)
+
+	for i := 0; i < len(Cart); i++ {
+		if Cart[i].Phone.ID == phoneID {
+			if Cart[i].Quantity > 1 {
+				Cart[i].Quantity = Cart[i].Quantity - 1
+				http.Redirect(w, r, "/cart", http.StatusSeeOther)
+				return
+			}
+		}
+
+	}
+
+}
+
 func main() {
+
+	http.HandleFunc("/increase", IncreaseQuantityHandler)
+	http.HandleFunc("/decrease", DecreaseQuantityHandler)
 
 	http.HandleFunc("/remove", RemoveHandler)
 	http.HandleFunc("/cart", CartHandler)

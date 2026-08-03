@@ -1,91 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Cart - PhoneHub</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
 
-<nav class="navbar">
-    <div class="logo">
-        <a href="/">📱 PhoneHub</a>
-    </div>
+<body class="cart-page-body">
 
-    <div class="nav-actions">
-        <a href="/">⬅ Continue Shopping</a>
-    </div>
-</nav>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="/">📱 PhoneHub</a>
+        </div>
+        <div class="nav-actions">
+            <a href="/" class="back-shopping-link">⬅ Continue Shopping</a>
+        </div>
+    </nav>
 
-<div class="cart-container">
+    <!-- Main Cart Wrapper -->
+    <div class="cart-wrapper">
+        <h1 class="cart-title">🛒 My Shopping Cart <span class="item-badge">({{.ItemCount}})</span></h1>
 
-    <h1>🛒 My Shopping Cart ({{.ItemCount}})</h1>
+        {{if .CartItems}}
+        <div class="cart-grid">
+            <!-- Left Side: Cart Items List -->
+            <div class="cart-items-list">
+                {{range .CartItems}}
+                <div class="cart-card">
+                    <div class="cart-image-wrapper">
+                        <img src="{{.Phone.Image}}" alt="{{.Phone.Name}}">
+                    </div>
 
-    {{if .CartItems}}
+                    <div class="cart-info">
+                        <div class="cart-item-header">
+                            <h2>{{.Phone.Name}}</h2>
+                            <span class="cart-price">{{.Phone.Price}}</span>
+                        </div>
 
-        {{range .CartItems}}
+                        <p class="cart-meta"><strong>Brand:</strong> {{.Phone.Brand}} | <strong>Capacity:</strong>
+                            {{.Phone.Capacity}}</p>
 
-        <div class="cart-card">
+                        <div class="cart-actions-row">
 
-            <div class="cart-image">
-                <img src="{{.Phone.Image}}" alt="{{.Phone.Name}}">
+                            <!-- <span class="quantity-tag">Quantity: <strong>{{.Quantity}}</strong></span> -->
+
+                            <p class="quantity-tag"><strong>Quantity:</strong></p>
+
+                            <div class="quantity-controls">
+
+                                <form action="/decrease" method="post">
+                                    <input type="hidden" name="phone_id" value="{{.Phone.ID}}">
+                                    <button>-</button>
+                                </form>
+
+                                <span>{{.Quantity}}</span>
+
+                                <form action="/increase" method="post">
+                                    <input type="hidden" name="phone_id" value="{{.Phone.ID}}">
+                                    <button>+</button>
+                                </form>
+
+                            </div>
+
+
+                            <form action="/remove" method="post" class="remove-form">
+                                <input type="hidden" name="phone_id" value="{{.Phone.ID}}">
+                                <button type="submit" class="remove-btn">
+                                    🗑 Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
             </div>
 
-            <div class="cart-info">
+            <!-- Right Side: Order Summary Card -->
+            <div class="cart-summary-card">
+                <h2>Order Summary</h2>
+                <div class="summary-line">
+                    <span>Items Total</span>
+                    <span>₦{{.Total}}</span>
+                </div>
+                <div class="summary-line">
+                    <span>Shipping</span>
+                    <span class="free-shipping">Free</span>
+                </div>
+                <hr class="summary-divider">
+                <div class="summary-total-line">
+                    <span>Total Amount</span>
+                    <span class="final-total">₦{{.Total}}</span>
+                </div>
 
-                <h2>{{.Phone.Name}}</h2>
-
-                <p><strong>Brand:</strong> {{.Phone.Brand}}</p>
-
-                <p><strong>Capacity:</strong> {{.Phone.Capacity}}</p>
-
-                <p><strong>Quantity:</strong> {{.Quantity}}</p>
-
-                <h3 class="price">{{.Phone.Price}}</h3>
-
-                <form action="/remove" method="post">
-                    <input
-                        type="hidden"
-                        name="phone_id"
-                        value="{{.Phone.ID}}">
-
-                    <button class="remove-btn">
-                        Remove
-                    </button>
-                </form>
-
+                <button class="checkout-btn">
+                    Proceed to Checkout
+                </button>
             </div>
-
         </div>
 
-        {{end}}
-
-        <div class="cart-footer">
-
-            <h2>Total: ₦{{.Total}}</h2>
-
-            <button class="checkout-btn">
-                Proceed to Checkout
-            </button>
-
-        </div>
-
-    {{else}}
-
+        {{else}}
+        <!-- Empty Cart State -->
         <div class="empty-cart">
-
+            <div class="empty-icon">🛒</div>
             <h2>Your cart is empty.</h2>
-
-            <p>Add some phones to begin shopping.</p>
-
-            <a href="/">Go Shopping</a>
-
+            <p>Looks like you haven't added any phones to your cart yet.</p>
+            <a href="/" class="shop-now-btn">Start Shopping</a>
         </div>
-
-    {{end}}
-
-</div>
+        {{end}}
+    </div>
 
 </body>
+
 </html>
