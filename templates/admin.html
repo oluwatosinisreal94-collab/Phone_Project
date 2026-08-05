@@ -162,7 +162,7 @@
         }
 
 
-.login-section {
+        .login-section {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -232,6 +232,48 @@
             transform: translateY(-2px);
         }
 
+
+        .status {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+
+        }
+
+        .new-status {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .processing-status {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .completed-status {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .phone-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .phone-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        .phone-image:hover {
+            transform: scale(1.2);
+        }
     </style>
 
 </head>
@@ -245,7 +287,7 @@
         <h2>📱 PhoneHub Admin</h2>
 
         <div>
-            Dashboard
+            👋 Welcome Admin
         </div>
 
         <form action="/logout" method="POST">
@@ -288,44 +330,78 @@
 
 
 
-        <h1>
-            Customer Orders
+        <h1 class="section-title">
+            📦 Customer Orders
         </h1>
 
 
         <table>
 
             <tr>
-                <th>ID</th>
+                <!-- <th>ID</th> -->
+                <th>Order</th>
                 <th>Customer</th>
-                <th>Phone Number</th>
-                <th>Address</th>
-                <th>Product</th>
-                <th>Price</th>
+                <th>Items</th>
+                <th>Total</th>
+
+                <!-- <th>Address</th> -->
+
                 <th>Status</th>
                 <th>Update</th>
                 <th>Delete</th>
             </tr>
 
+            {{if .Orders}}
             {{range .Orders}}
 
             <tr>
 
-                <td>{{.ID}}</td>
+                <!-- <td>{{.ID}}</td> -->
+                <td>#{{.ID}}</td>
 
-                <td>{{.Customer}}</td>
-                <td> {{.PhoneNumber}}</td>
-                <td> {{.Address}}</td>
-                <td>{{.ProductName}}</td>
-                <td>{{.ProductPrice}}</td>
-                <td>{{.Status}}</td>
+                <td><strong>{{.Customer}}</strong></td>
+
+                <!-- <td> {{.PhoneNumber}}</td> -->
+
+                <td>
+
+                    {{range .Items}}
+
+                    <div>
+                        {{.Phone.Name}} (x{{.Quantity}})
+                    </div>
+
+                    {{end}}
+
+                </td>
+
+                <td>₦{{.Total}}</td>
+
+                <!-- <td> {{.Address}}</td> -->
+                <td>
+
+                    {{if eq .Status "New"}}
+                    <span class="status new-status">🟢 New</span>
+                    {{end}}
+
+                    {{if eq .Status "Processing"}}
+                    <span class="status processing-status">🟡 Processing</span>
+                    {{end}}
+
+                    {{if eq .Status "Completed"}}
+                    <span class="status completed-status">🔵 Completed</span>
+                    {{end}}
+
+
+                </td>
+
                 <td>
                     <form action="/update" method="POST">
                         <input type="hidden" name="update" value="{{.ID}}">
-                        <button class="update">Update Status</button>
+                        <button class="update">Update</button>
                     </form>
-
                 </td>
+
                 <td>
                     <form action="/delete" method="POST">
                         <input type="hidden" name="delete" value="{{.ID}}">
@@ -337,12 +413,18 @@
 
             {{end}}
 
-        </table>
+            {{else}}
+            <tr>
+                <td colspan="7" style="text-align:center; padding:30px;">
+                    📭 No Orders Yet
+                </td>
+            </tr>
+            {{end}}
 
+        </table>
     </div>
 
-
-   <div class="login-section">
+    <div class="login-section">
         <div class="login-card">
             <h1>Add New Phone </h1>
             <form action="/addphone" method="POST" enctype="multipart/form-data">
@@ -350,9 +432,9 @@
                 <input type="text" name="name" placeholder="Enter Phone Name" required>
                 <label>Phone Price</label>
                 <input type="text" name="price" placeholder="Enter Phone Price" required>
-                 <label>Phone Brand</label>
+                <label>Phone Brand</label>
                 <input type="text" name="brand" placeholder="Enter Phone Brand" required>
-                 <label>Phone Image</label>
+                <label>Phone Image</label>
                 <input type="file" name="image" placeholder="Upload Phone Image" required>
                 <button type="submit"> Add Phone</button>
             </form>
@@ -360,11 +442,11 @@
     </div>
 
 
- <div class="container">
+    <div class="container">
 
 
         <h1 style="text-align: center; color: #6b7280;">
-           Available Items
+            Available Items
         </h1>
 
 
@@ -389,8 +471,9 @@
                 <td>{{.Name}}</td>
                 <td> {{.Price}}</td>
                 <td> {{.Brand}}</td>
-                <td><img src="{{.Image}}" alt="{{.Name}}" width="90%" height="150px" ></td>
-                
+                <td> <img src="{{.Image}}" class="phone-image"></td>
+
+
                 <td>
                     <form action="/deletephone" method="POST">
                         <input type="hidden" name="delete" value="{{.ID}}">

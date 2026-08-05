@@ -1,174 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Order | PhoneHub</title>
 
-    .track-order{
-    padding:60px 20px;
-    background:#f1f5f9;
-    display:flex;
-    justify-content:center;
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
+body{
+    background:#f4f6f9;
+    font-family:'Segoe UI',sans-serif;
+    color:#1e293b;
+}
 
-.track-box{
+.container{
+    max-width:850px;
+    margin:50px auto;
+    padding:20px;
+}
 
+.track-card{
     background:white;
-    width:90%;
-    max-width:450px;
-    padding:35px;
     border-radius:20px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-
-    text-align:center;
+    overflow:hidden;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
 }
 
-
-.track-box h2{
-
-    color:#111827;
-    margin-bottom:10px;
-
-}
-
-
-.track-box p{
-
-    color:#6b7280;
-    margin-bottom:25px;
-
-}
-
-
-.track-box input{
-
-    width:100%;
-    padding:14px;
-
-    border:1px solid #ddd;
-    border-radius:10px;
-
-    font-size:16px;
-
-}
-
-
-.track-box button{
-
-    width:100%;
-    margin-top:20px;
-
-    padding:14px;
-
-    background:#2563eb;
+.track-header{
+    background:linear-gradient(135deg,#0284c7,#0369a1);
     color:white;
+    text-align:center;
+    padding:45px;
+}
 
+.track-header h1{
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.track-header p{
+    opacity:.9;
+}
+
+.search-area{
+    padding:35px;
+}
+
+.search-area input{
+    width:100%;
+    padding:15px;
+    border:1px solid #d1d5db;
+    border-radius:12px;
+    font-size:16px;
+    margin-bottom:20px;
+}
+
+.search-area button{
+    width:100%;
+    padding:15px;
     border:none;
-    border-radius:10px;
-
+    background:#0284c7;
+    color:white;
+    border-radius:12px;
     font-size:17px;
+    font-weight:bold;
     cursor:pointer;
+    transition:.3s;
+}
+
+.search-area button:hover{
+    background:#0369a1;
+}
+
+.result-card{
+    margin:30px;
+    background:#f8fafc;
+    border-radius:15px;
+    padding:25px;
+}
+
+.result-title{
+    font-size:22px;
+    margin-bottom:20px;
+    color:#111827;
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.info-row:last-child{
+    border-bottom:none;
+}
+
+.label{
+    color:#64748b;
+    font-weight:600;
+}
+
+.status{
+    display:inline-block;
+    background:#dcfce7;
+    color:#15803d;
+    padding:6px 15px;
+    border-radius:30px;
+    font-weight:bold;
+}
+
+.items{
+    margin-top:30px;
+}
+
+.item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.item:last-child{
+    border-bottom:none;
+}
+
+.item-name{
+    font-weight:bold;
+}
+
+.item-brand{
+    color:#64748b;
+    font-size:14px;
+}
+
+.qty{
+    background:#e0f2fe;
+    color:#0284c7;
+    padding:5px 10px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+@media(max-width:700px){
+
+.info-row{
+flex-direction:column;
+gap:5px;
+}
+
+.item{
+flex-direction:column;
+align-items:flex-start;
+gap:10px;
+}
 
 }
 
-
-.track-box button:hover{
-
-    background:#1d4ed8;
-
-}
 </style>
 
 </head>
+
 <body>
-    
 
-    <div class="track-order">
+<div class="container">
 
-    <div class="track-box">
+<div class="track-card">
 
-        <h2>Track Your Order</h2>
+<div class="track-header">
 
-        <p>
-            Enter your order ID to check your order status
-        </p>
+<h1>📦 Track Your Order</h1>
 
-
-        <form action="/track" method="POST">
-
-            <input 
-                type="phone"
-                name="phone_number"
-                placeholder="Enter Order PhoneNumber"
-                required>
-
-
-            <button type="submit">
-                Track Order
-            </button>
-
-        </form>
-
-
-    </div>
+<p>
+Enter your phone number to check your order status.
+</p>
 
 </div>
 
+<div class="search-area">
 
+<form action="/track" method="POST">
 
-<div class="product-box">
+<input
+type="text"
+name="phone_number"
+placeholder="Enter your Phone Number"
+required>
 
+<button>
+Track Order
+</button>
 
+</form>
 
-<p>{{.Customer}}</p>
+</div>
 
+{{if .Customer}}
 
+<div class="result-card">
 
+<h2 class="result-title">
+Order Information
+</h2>
 
-<p>{{.PhoneNumber}}</p>
+<div class="info-row">
+<span class="label">Order ID</span>
+<span>#{{.ID}}</span>
+</div>
 
+<div class="info-row">
+<span class="label">Customer</span>
+<span>{{.Customer}}</span>
+</div>
 
+<div class="info-row">
+<span class="label">Phone</span>
+<span>{{.PhoneNumber}}</span>
+</div>
 
+<div class="info-row">
+<span class="label">Address</span>
+<span>{{.Address}}</span>
+</div>
 
+<div class="info-row">
+<span class="label">Status</span>
+<span class="status">{{.Status}}</span>
+</div>
 
-<p>Address: {{.Address}}</p>
+<div class="items">
 
+<h2 class="result-title">
+Items Ordered
+</h2>
 
+{{range .Items}}
 
+<div class="item">
 
-<p>{{.ProductName}}</p>
+<div>
 
+<div class="item-name">
+📱 {{.Phone.Name}}
+</div>
 
+<div class="item-brand">
+{{.Phone.Brand}}
+</div>
 
+</div>
 
-<p> {{.ProductPrice}}</p>
+<div>
 
+<div class="qty">
+Qty: {{.Quantity}}
+</div>
 
+<div style="margin-top:8px;font-weight:bold;">
+{{.Phone.Price}}
+</div>
 
+</div>
 
+</div>
 
-<p> {{.Status}}</p>
+{{end}}
 
+</div>
 
+</div>
 
+{{end}}
 
+</div>
+
+</div>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-

@@ -47,9 +47,11 @@ type Order struct {
 	PhoneNumber string
 	Address     string
 
-	ProductName  string
-	ProductPrice string
-	Status       string
+	// ProductName  string
+	// ProductPrice string
+	Items  []CartItem
+	Total  int
+	Status string
 }
 
 var CustomerInformation = []Order{}
@@ -168,6 +170,36 @@ type CartTotal struct {
 	ItemCount int
 }
 
+func GetCartData() CartTotal {
+
+	total := 0
+
+	itemCount := 0
+
+	for i := 0; i < len(Cart); i++ {
+
+		cleanPrice1 := Cart[i].Phone.Price
+		cleanPrice1 = strings.ReplaceAll(cleanPrice1, ",", "")
+		cleanPrice1 = strings.ReplaceAll(cleanPrice1, "₦", "")
+
+		price, _ := strconv.Atoi(cleanPrice1)
+
+		// total = total + price
+		total += price * Cart[i].Quantity
+
+		itemCount = itemCount + Cart[i].Quantity
+
+	}
+
+	cartData := CartTotal{
+		CartItems: Cart,
+		Total:     total,
+		ItemCount: itemCount,
+	}
+	return cartData
+
+}
+
 func AdminFunction(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("logged_in")
@@ -250,15 +282,19 @@ func IsValidPhone(phone string) bool {
 
 func SubmitFuntion(w http.ResponseWriter, r *http.Request) {
 
+	cartData := GetCartData()
+
 	CustomerOrder := Order{
 		ID:          idCounter,
 		Customer:    r.FormValue("customer"),
 		PhoneNumber: r.FormValue("phone_number"),
 		Address:     r.FormValue("address"),
 
-		ProductName:  r.FormValue("product_name"),
-		ProductPrice: r.FormValue("product_price"),
-		Status:       "New",
+		Items: Cart,
+		Total: cartData.Total,
+		// ProductName:  r.FormValue("product_name"),
+		// ProductPrice: r.FormValue("product_price"),
+		Status: "New",
 	}
 
 	if !IsValidPhone(CustomerOrder.PhoneNumber) {
@@ -268,6 +304,8 @@ func SubmitFuntion(w http.ResponseWriter, r *http.Request) {
 
 	idCounter++
 	CustomerInformation = append(CustomerInformation, CustomerOrder)
+
+	Cart = []CartItem{}
 
 	templ, _ := template.ParseFiles("templates/successful.html")
 	templ.Execute(w, CustomerOrder)
@@ -557,22 +595,49 @@ func SaveEditedPhoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ID := r.FormValue("id")
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		http.Error(w, "Unable to parse form", http.StatusBadRequest)
+		return
+	}
 
-	converInt, _ := strconv.Atoi(ID)
+	id, _ := strconv.Atoi(r.FormValue("id"))
 
 	for i := 0; i < len(phones); i++ {
-		if phones[i].ID == converInt {
+
+		if phones[i].ID == id {
+
+			// Update text fields
 			phones[i].Name = r.FormValue("name")
 			phones[i].Price = r.FormValue("price")
 			phones[i].Brand = r.FormValue("brand")
-			phones[i].Image = r.FormValue("image")
+
+			// Try to get a new uploaded image
+			file, header, err := r.FormFile("image")
+
+			// Only upload if a new image was selected
+			if err == nil {
+
+				defer file.Close()
+
+				filePath := "static/image/" + header.Filename
+
+				savedImage, err := os.Create(filePath)
+				if err == nil {
+
+					defer savedImage.Close()
+
+					io.Copy(savedImage, file)
+
+					phones[i].Image = "/" + filePath
+				}
+			}
 
 			break
 		}
 	}
-	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func IndexFunctionHandler(w http.ResponseWriter, r *http.Request) {
@@ -711,30 +776,7 @@ func PhoneHandler(w http.ResponseWriter, r *http.Request) {
 
 func CartHandler(w http.ResponseWriter, r *http.Request) {
 
-	total := 0
-
-	ItemCount := 0
-
-	for i := 0; i < len(Cart); i++ {
-
-		cleanPrice1 := Cart[i].Phone.Price
-		cleanPrice1 = strings.ReplaceAll(cleanPrice1, ",", "")
-		cleanPrice1 = strings.ReplaceAll(cleanPrice1, "₦", "")
-
-		price, _ := strconv.Atoi(cleanPrice1)
-
-		// total = total + price
-		total += price * Cart[i].Quantity
-
-		ItemCount = ItemCount + Cart[i].Quantity
-
-	}
-
-	cartData := CartTotal{
-		CartItems: Cart,
-		Total:     total,
-		ItemCount: ItemCount,
-	}
+	cartData := GetCartData()
 
 	templ, _ := template.ParseFiles("templates/cart.html")
 	templ.Execute(w, cartData)
@@ -795,6 +837,10 @@ func DecreaseQuantityHandler(w http.ResponseWriter, r *http.Request) {
 				Cart[i].Quantity = Cart[i].Quantity - 1
 				http.Redirect(w, r, "/cart", http.StatusSeeOther)
 				return
+			} else {
+				Cart = append(Cart[:i], Cart[i+1:]...)
+				http.Redirect(w, r, "/cart", http.StatusSeeOther)
+				return
 			}
 		}
 
@@ -802,8 +848,16 @@ func DecreaseQuantityHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
+	cartData := GetCartData()
+
+	templ, _ := template.ParseFiles("templates/checkout.html")
+	templ.Execute(w, cartData)
+}
+
 func main() {
 
+	http.HandleFunc("/checkout", CheckoutHandler)
 	http.HandleFunc("/increase", IncreaseQuantityHandler)
 	http.HandleFunc("/decrease", DecreaseQuantityHandler)
 

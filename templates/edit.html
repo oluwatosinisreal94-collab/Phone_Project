@@ -128,6 +128,17 @@
         .cancel:hover {
             background: #dc2626;
         }
+
+        .image-preview img:hover {
+            transform: scale(1.05);
+            transition: .3s;
+        }
+
+        .buttons {
+            border-top: 1px solid #ddd;
+            padding-top: 25px;
+            margin-top: 30px;
+        }
     </style>
 </head>
 
@@ -142,11 +153,12 @@
 
         <div class="card">
 
-            <h1>Edit Phone</h1>
+            <h1>✏ Edit Phone Details</h1>
 
             <p>Update the information below.</p>
 
-            <form action="/savephone" method="POST">
+            <!-- <form action="/savephone" method="POST"> -->
+            <form action="/savephone" method="POST" enctype="multipart/form-data">
 
                 <!-- Hidden ID -->
                 <input type="hidden" name="id" value="{{.ID}}">
@@ -155,29 +167,38 @@
                 <input type="text" name="name" value="{{.Name}}" required>
 
                 <label>Price</label>
-                <input type="text" name="price" value="{{.Price}}" required>
+                <input type="number" name="price" value="{{.Price}}" required>
 
                 <label>Brand</label>
                 <input type="text" name="brand" value="{{.Brand}}" required>
 
-                <label>Image Path</label>
-                <input type="text" name="image" value="{{.Image}}" required>
+                <!-- <label>Image Path</label>
+                <input type="text" name="image" value="{{.Image}}" required> -->
+
+                <label>Current Image</label>
 
                 <div class="image-preview">
                     <img src="{{.Image}}" alt="{{.Name}}">
                 </div>
 
-               
+                <label>Upload New Image (Optional)</label>
+                <input type="file" name="image">
+
+                <!-- <div class="image-preview">
+                    <img src="{{.Image}}" alt="{{.Name}}">
+                </div> -->
+
+
 
                 <div class="buttons">
-                   
-                        <input type="hidden" name="id" value="{{.ID}}">
-                        <button class="save" type="submit">
-                            💾 Save Changes
-                        </button>
-                  
+
+                    <input type="hidden" name="id" value="{{.ID}}">
+                    <button class="save" type="submit">
+                        💾 Save Changes
+                    </button>
+
                     <a href="/admin" class="cancel">
-                        Cancel
+                        ← Back to Dashboard
                     </a>
                 </div>
 
